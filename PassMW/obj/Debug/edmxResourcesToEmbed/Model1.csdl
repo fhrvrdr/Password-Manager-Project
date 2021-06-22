@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBPassMWModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tbl_Acc">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccUsername" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccPass" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UserID" Type="Int32" />
+    <NavigationProperty Name="tblUye" Relationship="Self.FK_tbl_Acc_tblUye" FromRole="tbl_Acc" ToRole="tblUye" />
+  </EntityType>
+  <EntityType Name="tblUye">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="passwordHint" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tbl_Acc" Relationship="Self.FK_tbl_Acc_tblUye" FromRole="tblUye" ToRole="tbl_Acc" />
+    <NavigationProperty Name="tblNot" Relationship="DBPassMWModel1.FK_tblNot_tblUye" FromRole="tblUye" ToRole="tblNot" />
+  </EntityType>
+  <Association Name="FK_tbl_Acc_tblUye">
+    <End Role="tblUye" Type="Self.tblUye" Multiplicity="0..1" />
+    <End Role="tbl_Acc" Type="Self.tbl_Acc" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUye">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tbl_Acc">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBPassMWEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="tbl_Acc" EntityType="Self.tbl_Acc" />
+    <EntitySet Name="tblUye" EntityType="Self.tblUye" />
+    <AssociationSet Name="FK_tbl_Acc_tblUye" Association="Self.FK_tbl_Acc_tblUye">
+      <End Role="tblUye" EntitySet="tblUye" />
+      <End Role="tbl_Acc" EntitySet="tbl_Acc" />
+    </AssociationSet>
+    <EntitySet Name="tblNot" EntityType="DBPassMWModel1.tblNot" />
+    <AssociationSet Name="FK_tblNot_tblUye" Association="DBPassMWModel1.FK_tblNot_tblUye">
+      <End Role="tblUye" EntitySet="tblUye" />
+      <End Role="tblNot" EntitySet="tblNot" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="tblNot">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NotAdi" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SifreliNot" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="tblUye" Relationship="DBPassMWModel1.FK_tblNot_tblUye" FromRole="tblNot" ToRole="tblUye" />
+  </EntityType>
+  <Association Name="FK_tblNot_tblUye">
+    <End Type="DBPassMWModel1.tblUye" Role="tblUye" Multiplicity="1" />
+    <End Type="DBPassMWModel1.tblNot" Role="tblNot" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUye">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblNot">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
